@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from datetime import timedelta
 
 from models.database import engine, Base
@@ -73,3 +74,56 @@ def read_parking(location: str, db: Session = Depends(auth.get_db)):
         return []
     parking_spots = db.query(user_model.Parking).filter(user_model.Parking.address.contains(location)).all()
     return parking_spots
+
+@app.get("/nearest")
+def read_nearest(
+    latitude: float,
+    longitude: float,
+    radius_m: float = 500,        # radius in meters
+    db: Session = Depends(auth.get_db)
+):
+    """
+    Returns the nearest parking spots within the specified radius.
+    Uses PostGIS geography-based distance queries.
+    """
+
+    sql = text("""
+        SELECT
+            id,
+            address,
+            capacity,
+            latitude,
+            longitude,
+            parking_type,
+            ST_Distance(
+                geom,
+                ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography
+            ) AS distance_m
+        FROM parking
+        WHERE ST_DWithin(
+            geom,
+            ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography,
+            :radius
+        )
+        ORDER BY distance_m
+        LIMIT 20;
+    """)
+
+    results = db.execute(sql, {
+        "lat": latitude,
+        "lon": longitude,
+        "radius": radius_m
+    }).fetchall()
+
+    return [
+        {
+            "id": row.id,
+            "address": row.address,
+            "capacity": row.capacity,
+            "latitude": row.latitude,
+            "longitude": row.longitude,
+            "parking_type": row.parking_type,
+            "distance_m": float(row.distance_m)
+        }
+        for row in results
+    ]
