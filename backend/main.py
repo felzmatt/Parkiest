@@ -11,6 +11,14 @@ import auth
 
 from fastapi.middleware.cors import CORSMiddleware
 
+from parking_time_estimators.estimator import ParkingCapacityEstimator
+
+from datetime import datetime
+
+print("Loading parking capacity estimator model...")
+estimator = ParkingCapacityEstimator("/app/synthentic_parking_occupancy.csv")
+print("Model loaded.")
+
 
 app = FastAPI()
 
@@ -149,3 +157,37 @@ def create_history_event(
     current_user.saved_time += event_in.saved_time
     db.commit()
     return event
+
+def get_current_hour_and_day_initial():
+    now = datetime.now()
+    hour_24 = now.hour
+
+    # Python's weekday(): Monday=0 ... Sunday=6
+    day_initials = ["MO", "TU", "WE", "TH", "FR", "SA", "SU"]
+    day_initial = day_initials[now.weekday()]
+
+    return hour_24, day_initial
+
+@app.post("/estimate_search_time")
+def estimate_search_time(
+    input: schemas.EstimateSearchTimeRequest
+):
+    """
+    Estimate parking search time based on input features.
+    """
+    hour, day_type = get_current_hour_and_day_initial()
+
+    estimated_occupancy = estimator.predict(
+        day_type=day_type,
+        hour=hour,
+        total_capacity=input.total_capacity,
+        latitude=input.latitude,
+        longitude=input.longitude
+    )
+
+    # Simple heuristic: assume search time increases with occupancy rate
+    base_time = 5  # base search time in minutes
+    occupancy_factor = estimated_occupancy / 100  # convert percentage to factor
+    estimated_search_time = base_time * (1 + occupancy_factor)
+
+    return {"estimated_search_time_minutes": estimated_search_time}

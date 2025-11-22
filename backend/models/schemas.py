@@ -44,6 +44,11 @@ class HistoryEventRead(BaseModel):
     class Config:
         from_attributes = True
 
+class EstimateSearchTimeRequest(BaseModel):
+    total_capacity: int
+    latitude: float
+    longitude: float
+
 
 class Token(BaseModel):
     access_token: str
