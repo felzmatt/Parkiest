@@ -82,6 +82,7 @@ function AuthPage({ onLogin }) {
           body: JSON.stringify({
             email: form.email,
             password: form.password,
+            name: form.name,
           }),
         });
 
