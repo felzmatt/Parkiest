@@ -6,11 +6,15 @@ from datetime import datetime
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
-
+    name: str
+    surname: str
 
 class UserRead(BaseModel):
     id: int
     email: EmailStr
+    name: str
+    surname: str
+    saved_time: Optional[float]
     is_active: bool
     created_at: Optional[datetime]
 
