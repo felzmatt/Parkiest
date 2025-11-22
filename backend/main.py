@@ -66,3 +66,10 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
 @app.get("/users/me", response_model=schemas.UserRead)
 def read_users_me(current_user: user_model.User = Depends(auth.get_current_user)):
     return current_user
+
+@app.get("/parking")
+def read_parking(location: str, db: Session = Depends(auth.get_db)):
+    if not location:
+        return []
+    parking_spots = db.query(user_model.Parking).filter(user_model.Parking.address.contains(location)).all()
+    return parking_spots

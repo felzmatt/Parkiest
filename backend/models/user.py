@@ -13,3 +13,13 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+class Parking(Base):
+    __tablename__ = "parking"
+
+    id = Column(String, primary_key=True)
+    address = Column(String, nullable=False)
+    capacity = Column(Integer, nullable=False)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    parking_type = Column(String, nullable=False)

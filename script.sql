@@ -19,8 +19,8 @@ CREATE TABLE parking (
     id VARCHAR(200) PRIMARY KEY,
     address VARCHAR(255),
     capacity DECIMAL(10,2),
-    latitude DOUBLE PRECISION,
-    longitude DOUBLE PRECISION,
+    latitude NUMERIC,
+    longitude NUMERIC,
     parking_type VARCHAR(50)
 );
 

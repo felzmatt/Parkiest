@@ -19,6 +19,17 @@ class UserRead(BaseModel):
     class Config:
         from_attributes = True
 
+class ParkingRead(BaseModel):
+    id: str
+    address: str
+    capacity: int
+    latitude: float
+    longitude: float
+    parking_type: str
+
+    class Config:
+        from_attributes = True
+
 
 class Token(BaseModel):
     access_token: str
