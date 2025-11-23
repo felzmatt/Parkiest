@@ -214,7 +214,7 @@ function MapPage({ user, onUserUpdate }) {
           saved_time: savedTimeMinutes,
         }),
       });
-      console.log(savedTimeMinutes);
+
       if (!res.ok) {
         const text = await res.text();
         console.error("Failed to create history event:", res.status, text);
@@ -296,101 +296,73 @@ function MapPage({ user, onUserUpdate }) {
     left: "50%",
     transform: "translateX(-50%)",
     zIndex: 20,
-
-    /* pill container */
-    padding: "4px",
+    display: "flex",
+    gap: "10px",
+    // top | right | bottom | left  → no right padding so button can touch edge
+    padding: "10px 0 10px 14px",
     background: "rgba(15,23,42,0.85)",
     borderRadius: "999px",
+    alignItems: "center",
     width: "90%",
-    maxWidth: "520px",
+    maxWidth: "480px",
     boxShadow: "0 12px 32px rgba(15,23,42,0.65)",
     backdropFilter: "blur(12px)",
     border: "1px solid rgba(148,163,184,0.35)",
-
-    /* layout */
-    display: "flex",
-    alignItems: "stretch",
-    overflow: "hidden",
   }}
 >
-  {/* INPUT SIDE – takes ~65% of bar */}
-  <div
+  <Autocomplete onLoad={onAutocompleteLoad}>
+    <input
+      type="text"
+      placeholder="Enter destination address"
+      value={address}
+      onChange={(e) => setAddress(e.target.value)}
+      style={{
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: "auto",
+
+        border: "1px solid rgba(148,163,184,0.35)",
+        outline: "none",
+        padding: "10px 14px",
+        borderRadius: "999px",
+        fontSize: "14px",
+        background: "rgba(2,6,23,0.65)",
+        color: "#e5e7eb",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.25) inset",
+        width: "220px"
+      }}
+      onFocus={(e) => {
+        e.target.style.borderColor = "#60a5fa";
+        e.target.style.boxShadow =
+          "0 0 0 2px rgba(96,165,250,0.6), 0 4px 12px rgba(0,0,0,0.25) inset";
+      }}
+      onBlur={(e) => {
+        e.target.style.borderColor = "rgba(148,163,184,0.35)";
+        e.target.style.boxShadow = "0 4px 12px rgba(0,0,0,0.25) inset";
+      }}
+    />
+  </Autocomplete>
+
+  <button
+    type="submit"
+    disabled={isSearching}
     style={{
-      flex: "0 0 65%",
-      minWidth: 0,
-      marginRight: "6px",
-      display: "flex",
-      alignItems: "stretch",
+      border: "none",
+      borderRadius: "999px",
+      padding: "10px 18px",
+      fontSize: "14px",
+      fontWeight: 600,
+      cursor: isSearching ? "default" : "pointer",
+      opacity: isSearching ? 0.7 : 1,
+      background:
+        "linear-gradient(135deg, rgba(59,130,246,1), rgba(129,140,248,1))",
+      color: "white",
+      boxShadow: "0 8px 20px rgba(37,99,235,0.35)",
+      whiteSpace: "nowrap",
     }}
   >
-    <Autocomplete onLoad={onAutocompleteLoad} style={{ flex: 1 }}>
-      <input
-        type="text"
-        placeholder="Enter destination address"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
-        style={{
-          width: "100%",
-          border: "1px solid rgba(148,163,184,0.35)",
-          outline: "none",
-          padding: "10px 14px",
-          borderRadius: "999px",
-          fontSize: "14px",
-          background: "rgba(2,6,23,0.75)",
-          color: "#e5e7eb",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.25) inset",
-        }}
-        onFocus={(e) => {
-          e.target.style.borderColor = "#60a5fa";
-          e.target.style.boxShadow =
-            "0 0 0 2px rgba(96,165,250,0.6), 0 4px 12px rgba(0,0,0,0.25) inset";
-        }}
-        onBlur={(e) => {
-          e.target.style.borderColor = "rgba(148,163,184,0.35)";
-          e.target.style.boxShadow =
-            "0 4px 12px rgba(0,0,0,0.25) inset";
-        }}
-      />
-    </Autocomplete>
-  </div>
-
-  {/* BUTTON SIDE – takes ~35% of bar */}
-  <button
-  type="submit"
-  disabled={isSearching}
-  style={{
-    flex: "0 0 35%",
-    minWidth: 0,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-
-    border: "none",
-    borderRadius: "999px",
-
-    /* inside button */
-    padding: "10px 14px",
-
-    /* 👇 add distance to pill border */
-    marginRight: "6px",
-
-    fontSize: "14px",
-    fontWeight: 600,
-    cursor: isSearching ? "default" : "pointer",
-    opacity: isSearching ? 0.7 : 1,
-    background:
-      "linear-gradient(135deg, rgba(59,130,246,1), rgba(129,140,248,1))",
-    color: "white",
-    boxShadow: "0 8px 20px rgba(37,99,235,0.35)",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-  }}
->
-  {isSearching ? "Searching…" : "Search"}
-</button>
-
-
+    {isSearching ? "Search" : "Search"}
+  </button>
 </form>
 
 
