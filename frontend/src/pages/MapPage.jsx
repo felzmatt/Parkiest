@@ -360,7 +360,7 @@ function MapPage({ user, onUserUpdate }) {
       whiteSpace: "nowrap",
     }}
   >
-    {isSearching ? "Searching…" : "Search"}
+    {isSearching ? "Searching…" : "Search parking"}
   </button>
 </form>
 
