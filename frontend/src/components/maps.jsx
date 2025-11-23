@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useCallback,
-  useMemo,
-  useEffect,
-} from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import {
   GoogleMap,
   useJsApiLoader,
@@ -120,6 +115,7 @@ function MapComponent({
   destination,
   onStartTrip,
 }) {
+  console.log(userLocation);
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: apiKey,
     libraries,
@@ -198,11 +194,11 @@ function MapComponent({
 
     const carSeconds = (carRoute.legs || []).reduce(
       (sum, leg) => sum + (leg.duration?.value || 0),
-      0
+      0,
     );
     const walkSeconds = (walkRoute.legs || []).reduce(
       (sum, leg) => sum + (leg.duration?.value || 0),
-      0
+      0,
     );
 
     const carMinutes = carSeconds / 60;
@@ -256,7 +252,7 @@ function MapComponent({
     const dest = `${selectedParking.lat},${selectedParking.lng}`;
 
     const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(
-      origin
+      origin,
     )}&destination=${encodeURIComponent(dest)}&travelmode=driving`;
 
     window.open(url, "_blank");
@@ -286,7 +282,7 @@ function MapComponent({
   };
 
   const startDisabled = !userLocation || !selectedParking;
-
+  console.log(startDisabled);
   return (
     <>
       {/* ----- MAP + ROUTES ----- */}
@@ -579,7 +575,10 @@ function MapComponent({
                       Car {Math.round(travelStatsForSelected.carMinutes)} min ·
                       Walk {Math.round(travelStatsForSelected.walkMinutes)} min
                       {travelStatsForSelected.searchMinutes != null && (
-                        <> · Search {travelStatsForSelected.searchMinutes} min</>
+                        <>
+                          {" "}
+                          · Search {travelStatsForSelected.searchMinutes} min
+                        </>
                       )}
                     </div>
                   </>
@@ -631,10 +630,10 @@ function MapComponent({
                       {hasSpot && hasAvgSearch ? (
                         (() => {
                           const avgSearchRounded = Math.round(
-                            averageSearchTimeMinutes
+                            averageSearchTimeMinutes,
                           );
                           const diffSearch = Math.round(
-                            averageSearchTimeMinutes - spotMinutes
+                            averageSearchTimeMinutes - spotMinutes,
                           );
 
                           let label;
@@ -644,9 +643,7 @@ function MapComponent({
                             label = `Saves ${diffSearch} min search`;
                             color = "#16a34a";
                           } else if (diffSearch < 0) {
-                            label = `${Math.abs(
-                              diffSearch
-                            )} min slower search`;
+                            label = `${Math.abs(diffSearch)} min slower search`;
                             color = "#dc2626";
                           } else {
                             label = "Search time around average";
@@ -701,22 +698,15 @@ function MapComponent({
                       hasAvgSearch &&
                       travelStatsForSelected.searchMinutes != null ? (
                         (() => {
-                          const {
-                            carMinutes,
-                            walkMinutes,
-                            totalMinutes,
-                          } = travelStatsForSelected;
+                          const { carMinutes, walkMinutes, totalMinutes } =
+                            travelStatsForSelected;
 
                           const avgTotalMinutes =
-                            averageSearchTimeMinutes +
-                            carMinutes +
-                            walkMinutes;
+                            averageSearchTimeMinutes + carMinutes + walkMinutes;
 
-                          const avgTotalRounded = Math.round(
-                            avgTotalMinutes
-                          );
+                          const avgTotalRounded = Math.round(avgTotalMinutes);
                           const diffTotal = Math.round(
-                            avgTotalMinutes - totalMinutes
+                            avgTotalMinutes - totalMinutes,
                           );
 
                           let label;
@@ -727,7 +717,7 @@ function MapComponent({
                             color = "#16a34a";
                           } else if (diffTotal < 0) {
                             label = `${Math.abs(
-                              diffTotal
+                              diffTotal,
                             )} min slower overall trip`;
                             color = "#dc2626";
                           } else {

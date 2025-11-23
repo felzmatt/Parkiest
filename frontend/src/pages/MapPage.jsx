@@ -288,7 +288,6 @@ function MapPage({ user, onUserUpdate }) {
             <span style={{ color: "#f97373", fontWeight: 500 }}>• {error}</span>
           )}
         </div>
-
         {/* Destination search with Google Places Autocomplete */}
         <form
           onSubmit={handleSearch}
@@ -343,16 +342,28 @@ function MapPage({ user, onUserUpdate }) {
             {isSearching ? "Searching…" : "Search parking"}
           </button>
         </form>
-
-        <MapComponent
-          apiKey={GOOGLE_MAPS_API_KEY}
-          center={center}
-          zoom={zoom}
-          locations={locations}
-          userLocation={userLocation}
-          destination={destination}
-          onStartTrip={handleStartTrip}
-        />
+        {userLocation && (
+          <MapComponent
+            apiKey={GOOGLE_MAPS_API_KEY}
+            center={center}
+            zoom={zoom}
+            locations={locations}
+            userLocation={userLocation}
+            destination={destination}
+            onStartTrip={handleStartTrip}
+          />
+        )}{" "}
+        {!userLocation && (
+          <MapComponent
+            apiKey={GOOGLE_MAPS_API_KEY}
+            center={center}
+            zoom={zoom}
+            locations={locations}
+            userLocation={FALLBACK_CENTER}
+            destination={destination}
+            onStartTrip={handleStartTrip}
+          />
+        )}
       </main>
     </div>
   );
