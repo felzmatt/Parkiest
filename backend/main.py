@@ -181,7 +181,7 @@ def estimate_search_time(
     """
     hour, day_type = get_current_hour_and_day_initial()
 
-    estimated_occupancy = estimator.predict(
+    estimated_occupancy = estimator.predict_search_time(
         day_type=day_type,
         hour=hour,
         total_capacity=input.total_capacity,
