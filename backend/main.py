@@ -181,17 +181,14 @@ def estimate_search_time(
     """
     hour, day_type = get_current_hour_and_day_initial()
 
-    estimated_occupancy = estimator.predict_search_time(
+    
+
+    
+
+    return {"estimated_search_time_minutes": estimator.predict_search_time(
         day_type=day_type,
         hour=hour,
         total_capacity=input.total_capacity,
         latitude=input.latitude,
         longitude=input.longitude
-    )
-
-    # Simple heuristic: assume search time increases with occupancy rate
-    base_time = 5  # base search time in minutes
-    occupancy_factor = estimated_occupancy / 100  # convert percentage to factor
-    estimated_search_time = base_time * (1 + occupancy_factor)
-
-    return {"estimated_search_time_minutes": estimated_search_time}
+    )}
