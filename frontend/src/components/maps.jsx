@@ -454,18 +454,11 @@ function MapComponent({
 
         {/* Destination marker */}
         {destination && (
-          <Marker
-            position={destination}
-            icon={{
-              path: window.google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-              scale: 5,
-              fillColor: "#16a34a",
-              fillOpacity: 1,
-              strokeColor: "white",
-              strokeWeight: 2,
-            }}
-          />
-        )}
+  <Marker
+    position={destination}
+  />
+)}
+
       </GoogleMap>
 
       {/* ----- MOBILE BOTTOM SHEET ----- */}
