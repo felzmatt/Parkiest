@@ -1,6 +1,6 @@
 # Parkest
 ## Disclaimer:
-**This is a project built in a Hackathon in 48 Hours. It is not high-quality code!**
+**This is a project built in a Hackathon in 48 Hours.**
 
 ## The application
 Parkest is a parking-optimization web application designed to help users find the best parking spot near their chosen destination. The app automatically:
